@@ -362,12 +362,6 @@ NSString *const kTYTextRunAttributedName = @"TYTextRunAttributedName";
             [_delegate attributedLabel:weakSelf textStorageClicked:textStorage atPoint:point];
         }
     }];
-    
-    if (sender.state == UIGestureRecognizerStateEnded
-        && !found
-        && [self.delegate respondsToSelector:@selector(attributedLabel:tapUndefinedAreaWithPoint:)]) {
-        [self.delegate attributedLabel:self tapUndefinedAreaWithPoint:point];
-    }
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)sender
@@ -388,6 +382,21 @@ NSString *const kTYTextRunAttributedName = @"TYTextRunAttributedName";
 }
 
 #pragma mark - touches action
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    __block BOOL found = NO;
+    if ([_textContainer existLinkRectDictionary]) {
+        [_textContainer enumerateLinkRectContainPoint:point viewHeight:CGRectGetHeight(self.frame) successBlock:^(id<TYLinkStorageProtocol> linkStorage) {
+            found = YES;
+        }];
+    }
+    
+    if (!found) {
+        return [super hitTest:point withEvent:event];
+    }
+    
+    return self;
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
