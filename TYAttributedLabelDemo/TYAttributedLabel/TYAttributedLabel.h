@@ -27,6 +27,9 @@ typedef NS_ENUM(NSUInteger, TYVerticalAlignment) {
     
 // 长按非Container区域代理 有多个状态 begin, changes, end 都会调用,所以需要判断状态
 - (void)attributedLabel:(TYAttributedLabel *)attributedLabel lableLongPressOnState:(UIGestureRecognizerState)state atPoint:(CGPoint)point;
+
+///  点击未定义区域
+- (void)attributedLabel:(TYAttributedLabel *)attributedLabel tapUndefinedAreaWithPoint:(CGPoint)point;
 @end
 
 /**

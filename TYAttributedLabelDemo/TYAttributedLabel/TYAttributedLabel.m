@@ -355,11 +355,19 @@ NSString *const kTYTextRunAttributedName = @"TYTextRunAttributedName";
     CGPoint point = [sender locationInView:self];
     point = [self covertTapPiont:point];
     __typeof (self) __weak weakSelf = self;
+    __block bool found = false;
     [_textContainer enumerateRunRectContainPoint:point viewHeight:CGRectGetHeight(self.frame) successBlock:^(id<TYTextStorageProtocol> textStorage){
         if (_delegateFlags.textStorageClickedAtPoint) {
+            found = true;
             [_delegate attributedLabel:weakSelf textStorageClicked:textStorage atPoint:point];
         }
     }];
+    
+    if (sender.state == UIGestureRecognizerStateEnded
+        && !found
+        && [self.delegate respondsToSelector:@selector(attributedLabel:tapUndefinedAreaWithPoint:)]) {
+        [self.delegate attributedLabel:self tapUndefinedAreaWithPoint:point];
+    }
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)sender
