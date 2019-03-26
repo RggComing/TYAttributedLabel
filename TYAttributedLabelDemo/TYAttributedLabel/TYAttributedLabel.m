@@ -392,7 +392,7 @@ NSString *const kTYTextRunAttributedName = @"TYTextRunAttributedName";
     }
     
     if (!found) {
-        return [super hitTest:point withEvent:event];
+        return [self.superview hitTest:point withEvent:event];
     }
     
     return self;
